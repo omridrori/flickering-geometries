@@ -1,0 +1,69 @@
+# mind_in_context - single source of truth for all parameters.
+# Every analysis and figure reads from this file via lib.io.load_config().
+
+# ---------------------------------------------------------------------------
+# Models - Llama-3 is the primary; Mistral is a robustness check.
+# ---------------------------------------------------------------------------
+models:
+  llama3:
+    hf_name: "meta-llama/Meta-Llama-3-8B"
+    layer: 15
+    primary: true
+  mistral7b:
+    hf_name: "mistralai/Mistral-7B-v0.1"
+    # Layer 15 is the only layer with a full-context embedding set on disk
+    # (and the only one the per-context window set shares with llama3).
+    layer: 15
+    primary: false
+
+# ---------------------------------------------------------------------------
+# ROIs - Destrieux atlas labels + display names + colors.
+# Default is to use ALL contacts in each ROI (73 lang / 135 aud).
+# ---------------------------------------------------------------------------
+rois:
+  aud:
+    atlas_label: "G_temp_sup-Lateral"
+    display_name: "Auditory area"
+    color: "#0A9396"
+  lang:
+    atlas_label: "G_front_inf-Triangul"
+    display_name: "Language area"
+    color: "#E63946"
+
+# ---------------------------------------------------------------------------
+# Shared analysis parameters.
+# ---------------------------------------------------------------------------
+shared:
+  lag_start_ms: -500
+  lag_end_ms: 1000
+  lag_step_ms: 25
+  half_window_ms: 50
+  # ERG gap: the offset of the partner matrix in
+  # rho_ERG(t) = Spearman(RDM(t), RDM(t+delta)). The activation window is
+  # +-half_window_ms, 100 ms wide, so delta = 100 is the smallest gap for which
+  # the two matrices are built from non-overlapping samples; at delta = 25 they
+  # share 75% of their samples and rho_ERG is inflated accordingly.
+  #
+  # delta is NOT the lag spacing. Every ERG-style analysis must read this key
+  # rather than re-deriving delta from lag_step_ms - doing the latter silently
+  # couples the two.
+  erg_delta_ms: 100
+  winsorize: true
+  winsorize_sd: 3.0
+  baseline_window_ms: [-5000, -1000]
+  n_eqword_segments: 10
+  # Skipping context 1 (single-word context - degenerate, no real RDM structure).
+  context_lengths: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, "full"]
+  layers_for_layer_scan: [5, 10, 15, 20, 25, 30]
+  surprisal_quintiles: [1, 5]   # Q1 (low), Q5 (high)
+
+# ---------------------------------------------------------------------------
+# Visualization (mirrored in lib/style.py - keep in sync).
+# ---------------------------------------------------------------------------
+style:
+  segment_gradient_cmap: "coolwarm"
+  word_onset_color: "#9D0208"
+  q1_color: "#4361EE"   # low-surprisal - blue
+  q5_color: "#E63946"   # high-surprisal - red
+  fig_format: "svg"
+  dpi: 300
