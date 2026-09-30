@@ -51,7 +51,17 @@ Two environment variables move it elsewhere:
 
 ## 2. Installation
 
-Python 3.11. A CUDA GPU (12 GB or more) is needed only for the embeddings (step 5).
+### System requirements
+
+- **Tested on:** Windows 11 Pro (build 26200), Python 3.11.10, with the package versions
+  pinned in `requirements.txt` (PyTorch 2.5.1 with CUDA 12.1).
+- **Redrawing the figures:** any standard computer; no special hardware.
+- **Recomputing the analyses:** about 65 GB of free disk space for the brain caches. A CUDA GPU
+  speeds up the RDM computations; without one they run on the CPU.
+- **Generating the embeddings:** an NVIDIA GPU with 12 GB of memory (tested on an RTX 4000 Ada
+  Laptop GPU, 12 GB).
+
+### Install
 
 ```bash
 conda create -n flickering python=3.11
@@ -60,7 +70,19 @@ pip install torch --index-url https://download.pytorch.org/whl/cu121
 pip install -r requirements.txt
 ```
 
+Typical install time: about 5 minutes (measured on a laptop, 3 of them for the PyTorch download).
+
 All commands below are run from the repository root.
+
+### Quick demo (no data needed)
+
+```bash
+python mind_in_context/figures/fig2.py
+```
+
+This redraws Figure 2 of the paper from the results included in the repository and writes it to
+`mind_in_context/plots/fig2.svg`. Expected output: the same figure as in the paper. Expected run
+time: about 1 minute the first time (one-off font cache), then a few seconds per figure.
 
 ---
 
