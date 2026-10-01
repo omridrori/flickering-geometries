@@ -81,8 +81,7 @@ python mind_in_context/figures/fig2.py
 ```
 
 This redraws Figure 2 of the paper from the results included in the repository and writes it to
-`mind_in_context/plots/fig2.svg`. Expected output: the same figure as in the paper. Expected run
-time: about 1 minute the first time (one-off font cache), then a few seconds per figure.
+`mind_in_context/plots/fig2.svg`. Expected output: the same figure as in the paper.
 
 ---
 
